@@ -165,7 +165,7 @@ function renderTodos() {
     const html = `
       <li class="list-group-item todo-item d-flex justify-content-between align-items-start">
         <div class="flex-grow-1 me-3">
-          <div class="fw-bold ${textClass}">${todo.text}</div>
+          <div class="fw-bold ${textClass}">${escapeHtml(todo.text)}</div>
           <div class="badge-box mt-2">
             <span class="badge bg-primary">우선순위: ${todo.priority}</span>
             <span class="badge bg-danger">중요도: ${todo.importance}</span>
@@ -187,4 +187,13 @@ function renderTodos() {
 
     todoListTag.append(html); // 하나의 할일을 ul태그에 출력(끝에 첨부)
   });
+
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 }
