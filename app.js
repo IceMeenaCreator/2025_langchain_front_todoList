@@ -75,6 +75,14 @@ function addTodo() {
 
   // 화면에 출력
   renderTodos();
+
+  // 입력값들 초기화
+  $("#todoText").val("");
+  $("#priorityRange").val(3);
+  $("#importanceRange").val(3);
+  $("#priorityValue").text(3);
+  $("#importanceValue").text(3);
+  $("#todoText").focus();
 }
 
 function saveTodos() {
@@ -129,7 +137,15 @@ function sortTodos() {
   // });
 }
 
-function loadTodos() {}
+function loadTodos() {
+  // localStorage에 저장했던 할일 목록(json문자열)을 로딩해와 객체배열로 변환해야 함.
+  const savedTodos = localStorage.getItem(STORAGE_KEY); // 문자열
+
+  if (saveTodos) {
+    todoList = JSON.parse(savedTodos); // 객체배열로 변환
+    sortTodos();
+  }
+}
 
 function renderTodos() {
   // 할일 목록(todoList 배열)을 화면에 출력하는 함수
@@ -165,7 +181,7 @@ function renderTodos() {
     const html = `
       <li class="list-group-item todo-item d-flex justify-content-between align-items-start">
         <div class="flex-grow-1 me-3">
-          <div class="fw-bold ${textClass}">${escapeHtml(todo.text)}</div>
+          <div class="fw-bold ${textClass}">${escapeHtml(todo.text)})</div>
           <div class="badge-box mt-2">
             <span class="badge bg-primary">우선순위: ${todo.priority}</span>
             <span class="badge bg-danger">중요도: ${todo.importance}</span>
@@ -188,6 +204,7 @@ function renderTodos() {
     todoListTag.append(html); // 하나의 할일을 ul태그에 출력(끝에 첨부)
   });
 
+  // XSS 방지
   function escapeHtml(text) {
     return text
       .replace(/&/g, "&amp;")
